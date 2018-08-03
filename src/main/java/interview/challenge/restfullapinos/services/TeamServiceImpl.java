@@ -4,6 +4,10 @@ import interview.challenge.restfullapinos.domain.Team;
 import interview.challenge.restfullapinos.repositories.TeamRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -29,35 +33,50 @@ public class TeamServiceImpl implements TeamService {
     }
 
     @Override
-    public Team searchTeamByName(String name) {
+    public Set<Team> searchTeamByName(String name) {
 
-        return null;
+        return teamRepository.searchByName(name);
     }
 
     @Override
-    public Team searchTeamByCoach(String coachName) {
-        return null;
+    public Set<Team> searchTeamByCoach(String coachName) {
+        
+        return teamRepository.searchByCoach(coachName);
     }
 
     @Override
-    public void deleteTeam(String idToDelete) {
+    public void deleteTeamById(String idToDelete) {
         teamRepository.deleteById(idToDelete);
         log.debug("Team with id:" + idToDelete +" Deleted");
 
     }
 
     @Override
-    public void addTeam(Team team) {
-
+    @PutMapping
+    public void addTeam(@RequestBody Team team) {
+        teamRepository.insert(team);
     }
 
     @Override
-    public void updateTeamInfo(Team team) {
+    @DeleteMapping
+    public void deleteTeam(@RequestBody Team team) {
+        teamRepository.delete(team);
+    }
+
+    @Override
+    @PostMapping
+    public void updateTeamInfo(@RequestBody Team team) {
+        teamRepository.save(team);
 
     }
 
     @Override
     public void teamMatches(Team team) {
 
+    }
+
+    public Team getByID(String id){
+
+        return teamRepository.findById(id).get();
     }
 }

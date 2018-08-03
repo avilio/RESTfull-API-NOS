@@ -8,11 +8,12 @@ public interface TeamService {
 
     Set<Team> getTeams();
 
-    Team searchTeamByName(String name);
-    Team searchTeamByCoach(String coachName);
+    Set<Team> searchTeamByName(String name);
+    Set<Team> searchTeamByCoach(String coachName);
 
-    void deleteTeam(String idToDelete);
+    void deleteTeamById(String idToDelete);
     void addTeam(Team team);
+    void deleteTeam(Team team);
     void updateTeamInfo(Team team);
     void teamMatches(Team team);
 }

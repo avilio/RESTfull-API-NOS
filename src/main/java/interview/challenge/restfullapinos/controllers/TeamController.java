@@ -1,5 +1,6 @@
 package interview.challenge.restfullapinos.controllers;
 
+
 import interview.challenge.restfullapinos.services.TeamService;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -11,7 +12,5 @@ public class TeamController {
     public TeamController(TeamService teamService) {
         this.teamService = teamService;
     }
-
-
 
 }
