@@ -12,5 +12,4 @@ public class RestfullApiNosApplicationTests {
     @Test
     public void contextLoads() {
     }
-
 }

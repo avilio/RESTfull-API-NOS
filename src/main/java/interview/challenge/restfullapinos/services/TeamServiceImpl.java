@@ -1,27 +1,25 @@
 package interview.challenge.restfullapinos.services;
 
+import interview.challenge.restfullapinos.domain.Match;
+import interview.challenge.restfullapinos.domain.MatchResult;
 import interview.challenge.restfullapinos.domain.Team;
 import interview.challenge.restfullapinos.repositories.TeamRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.bson.types.ObjectId;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 @Slf4j
 @Service
 public class TeamServiceImpl implements TeamService {
 
-    private final TeamRepository teamRepository;
-
-    public TeamServiceImpl(TeamRepository teamRepository) {
-        this.teamRepository = teamRepository;
-    }
-
+    @Autowired
+    private TeamRepository teamRepository;
 
     @Override
     public Set<Team> getTeams() {
@@ -40,8 +38,8 @@ public class TeamServiceImpl implements TeamService {
 
     @Override
     public Set<Team> searchTeamByCoach(String coachName) {
-        log.debug("Searching team with coach:"+coachName);
-        return teamRepository.searchByCoach(coachName);
+        log.info("Searching team with coach:"+coachName);
+        return teamRepository.findByCoachName(coachName);
     }
 
     @Override
@@ -52,34 +50,58 @@ public class TeamServiceImpl implements TeamService {
     }
 
     @Override
-    @PutMapping
-    public void addTeam(@RequestBody Team team) {
-        teamRepository.insert(team);
-        log.debug("Team "+team +"was added!");
+    public Team addTeam(Team team) {
+        team.getCoach().setId(new ObjectId().toString());
+        Team savedTeam = teamRepository.insert(team);
+        log.debug("Team "+team +" was added!");
+        return savedTeam;
     }
 
     @Override
-    @DeleteMapping
-    public void deleteTeam(@RequestBody Team team) {
+    public void deleteTeam(Team team) {
         teamRepository.delete(team);
-        log.debug("Team "+team +"was deleted!");
+        log.debug("Team "+team +" was deleted!");
     }
 
     @Override
-    @PostMapping
-    public void updateTeamInfo(@RequestBody Team team) {
-        teamRepository.save(team);
-        log.debug("Team "+team +"was updated!");
-
+    public Team updateTeamInfo(Team team) {
+        Team savedTeam = teamRepository.save(team);
+        log.info("Team "+team +" was updated!");
+        return savedTeam;
     }
 
     @Override
-    public void teamMatches(Team team) {
-        //todo
+    public void addMatch(String teamId, Match match) {
+        Optional<Team> teamObject = teamRepository.findById(teamId);
+
+        if(teamObject.isPresent()) {
+            match.setId(new ObjectId().toString());
+            Team team = teamObject.get();
+            team.getMatches().add(match);
+
+            teamRepository.save(team);
+        }
+
+        Optional<Team> againstTeamObject = teamRepository.findById(match.getAgainstTeamId());
+
+        if(againstTeamObject.isPresent()) {
+            Match againstMatch = new Match();
+            againstMatch.setAgainstTeamId(teamId);
+            againstMatch.setMatchResult(inverseMatchResult(match.getMatchResult()));
+            Team againstTeam = againstTeamObject.get();
+            againstTeam.getMatches().add(againstMatch);
+            teamRepository.save(againstTeam);
+        }
     }
 
-    public Team getByID(String id){
+    private MatchResult inverseMatchResult(MatchResult matchResult) {
 
-        return teamRepository.findById(id).get();
+        switch (matchResult){
+
+            case WON: return MatchResult.LOST;
+            case LOST: return MatchResult.WON;
+            default: return matchResult;
+
+        }
     }
 }
