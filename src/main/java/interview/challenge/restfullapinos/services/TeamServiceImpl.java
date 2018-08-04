@@ -25,7 +25,7 @@ public class TeamServiceImpl implements TeamService {
 
     @Override
     public Set<Team> getTeams() {
-
+        log.debug("Search for all Teams info");
         Set<Team> teamSet = new HashSet<>();
         teamRepository.findAll().iterator().forEachRemaining(teamSet::add);
 
@@ -34,13 +34,13 @@ public class TeamServiceImpl implements TeamService {
 
     @Override
     public Set<Team> searchTeamByName(String name) {
-
+        log.debug("Searching team with name:"+name);
         return teamRepository.searchByName(name);
     }
 
     @Override
     public Set<Team> searchTeamByCoach(String coachName) {
-        
+        log.debug("Searching team with coach:"+coachName);
         return teamRepository.searchByCoach(coachName);
     }
 
@@ -55,24 +55,27 @@ public class TeamServiceImpl implements TeamService {
     @PutMapping
     public void addTeam(@RequestBody Team team) {
         teamRepository.insert(team);
+        log.debug("Team "+team +"was added!");
     }
 
     @Override
     @DeleteMapping
     public void deleteTeam(@RequestBody Team team) {
         teamRepository.delete(team);
+        log.debug("Team "+team +"was deleted!");
     }
 
     @Override
     @PostMapping
     public void updateTeamInfo(@RequestBody Team team) {
         teamRepository.save(team);
+        log.debug("Team "+team +"was updated!");
 
     }
 
     @Override
     public void teamMatches(Team team) {
-
+        //todo
     }
 
     public Team getByID(String id){
