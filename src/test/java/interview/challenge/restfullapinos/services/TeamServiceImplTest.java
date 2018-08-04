@@ -86,7 +86,7 @@ public class TeamServiceImplTest {
 
         Team teamToDelete = (Team) teams.toArray()[1];
 
-        teamRepository.deleteById(Mockito.anyString());
+        Mockito.verify(teamRepository).deleteById(Mockito.anyString());
 
         // when
         teamService.deleteTeamById(teamToDelete.getId());

@@ -42,15 +42,11 @@ public class TeamServiceImpl implements TeamService {
     }
 
     @Override
-    public Team deleteTeamById(String idToDelete) {
-        Team teamDeleted = new Team();
-        if (teamRepository.findById(idToDelete).isPresent())
-            teamDeleted = teamRepository.findById(idToDelete).get();
-
+    public void deleteTeamById(String idToDelete) {
+       // if (teamRepository.findById(idToDelete).isPresent())
         teamRepository.deleteById(idToDelete);
         log.info("Team with id:" + idToDelete +" Deleted");
 
-        return teamDeleted;
     }
 
     @Override
@@ -62,10 +58,9 @@ public class TeamServiceImpl implements TeamService {
     }
 
     @Override
-    public Team deleteTeam(Team team) {
+    public void deleteTeam(Team team) {
         teamRepository.delete(team);
         log.info("Team "+team +" was deleted!");
-        return team;
     }
 
     @Override
