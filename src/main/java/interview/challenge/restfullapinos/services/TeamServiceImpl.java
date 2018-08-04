@@ -9,7 +9,6 @@ import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -23,7 +22,7 @@ public class TeamServiceImpl implements TeamService {
 
     @Override
     public Set<Team> getTeams() {
-        log.debug("Search for all Teams info");
+        log.info("Search for all Teams info");
         Set<Team> teamSet = new HashSet<>();
         teamRepository.findAll().iterator().forEachRemaining(teamSet::add);
 
@@ -32,7 +31,7 @@ public class TeamServiceImpl implements TeamService {
 
     @Override
     public Set<Team> searchTeamByName(String name) {
-        log.debug("Searching team with name:"+name);
+        log.info("Searching team with name:"+name);
         return teamRepository.searchByName(name);
     }
 
@@ -43,24 +42,30 @@ public class TeamServiceImpl implements TeamService {
     }
 
     @Override
-    public void deleteTeamById(String idToDelete) {
-        teamRepository.deleteById(idToDelete);
-        log.debug("Team with id:" + idToDelete +" Deleted");
+    public Team deleteTeamById(String idToDelete) {
+        Team teamDeleted = new Team();
+        if (teamRepository.findById(idToDelete).isPresent())
+            teamDeleted = teamRepository.findById(idToDelete).get();
 
+        teamRepository.deleteById(idToDelete);
+        log.info("Team with id:" + idToDelete +" Deleted");
+
+        return teamDeleted;
     }
 
     @Override
     public Team addTeam(Team team) {
         team.getCoach().setId(new ObjectId().toString());
         Team savedTeam = teamRepository.insert(team);
-        log.debug("Team "+team +" was added!");
+        log.info("Team "+team +" was added!");
         return savedTeam;
     }
 
     @Override
-    public void deleteTeam(Team team) {
+    public Team deleteTeam(Team team) {
         teamRepository.delete(team);
-        log.debug("Team "+team +" was deleted!");
+        log.info("Team "+team +" was deleted!");
+        return team;
     }
 
     @Override
@@ -72,6 +77,7 @@ public class TeamServiceImpl implements TeamService {
 
     @Override
     public void addMatch(String teamId, Match match) {
+
         Optional<Team> teamObject = teamRepository.findById(teamId);
 
         if(teamObject.isPresent()) {
@@ -80,6 +86,7 @@ public class TeamServiceImpl implements TeamService {
             team.getMatches().add(match);
 
             teamRepository.save(team);
+            log.info("match added: " + match.toString() + "to team:" + team.getName());
         }
 
         Optional<Team> againstTeamObject = teamRepository.findById(match.getAgainstTeamId());
@@ -90,18 +97,22 @@ public class TeamServiceImpl implements TeamService {
             againstMatch.setMatchResult(inverseMatchResult(match.getMatchResult()));
             Team againstTeam = againstTeamObject.get();
             againstTeam.getMatches().add(againstMatch);
+
             teamRepository.save(againstTeam);
+            log.info("match added: " + againstMatch.toString() + "to team:" + againstTeam.getName());
         }
+
+        log.info("Match between" + teamObject.get().getName() + "and" + againstTeamObject.get().getName() + "added");
+
+
     }
 
     private MatchResult inverseMatchResult(MatchResult matchResult) {
 
         switch (matchResult){
-
             case WON: return MatchResult.LOST;
             case LOST: return MatchResult.WON;
             default: return matchResult;
-
         }
     }
 }

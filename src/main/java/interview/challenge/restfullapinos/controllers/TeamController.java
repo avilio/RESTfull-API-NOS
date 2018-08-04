@@ -56,4 +56,16 @@ public class TeamController {
         teamService.addMatch(teamId, match);
         return  ResponseEntity.noContent().build();
     }
+
+    @DeleteMapping
+    public ResponseEntity<?> deleteTeam(@RequestBody Team team){
+        teamService.deleteTeam(team);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/delete/{teamId}")
+    public ResponseEntity<?> deleteTeamById(@PathVariable String teamId){
+        teamService.deleteTeamById(teamId);
+        return ResponseEntity.noContent().build();
+    }
 }
