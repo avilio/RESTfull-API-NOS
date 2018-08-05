@@ -54,7 +54,13 @@ public class TeamController {
     @PostMapping("/match/{teamId}")
     public ResponseEntity<?> addMatch(@PathVariable String teamId, @RequestBody Match match) {
         teamService.addMatch(teamId, match);
-        return  ResponseEntity.noContent().build();
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/match/update/{teamId}")
+    public ResponseEntity<?> updateMatch(@PathVariable String teamId, @RequestBody Match match){
+        teamService.updateMatch(teamId,match);
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping

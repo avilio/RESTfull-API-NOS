@@ -18,4 +18,5 @@ public interface TeamService {
     Team updateTeamInfo(Team team);
 
     void addMatch(String teamId, Match match);
+    void updateMatch(String teamId,Match match);
 }
