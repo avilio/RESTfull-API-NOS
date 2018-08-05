@@ -51,26 +51,6 @@ public class TeamServiceImplTest {
     }
 
     @Test
-    public void searchTeamByNameThatExists() {
-        // given
-        Set<Team> teams = new HashSet<>();
-        teams.add(createTeam("team1"));
-
-        when(teamRepository.searchByName(Mockito.anyString())).thenReturn(teams);
-
-        // when
-        Set<Team> team1 = teamService.searchTeamByName("team1");
-
-        // then
-        Assert.assertNotNull(team1);
-        Assert.assertEquals(1, team1.size());
-
-        Team team = (Team) team1.toArray()[0];
-
-        Assert.assertEquals("team1", team.getName());
-    }
-
-    @Test
     public void searchTeamByNameThatDoesntExists() {
        //given
         Set<Team> teams = new HashSet<>();
@@ -98,7 +78,7 @@ public class TeamServiceImplTest {
 
     }
 
-    @Test
+   /* @Test
     public void updateTeamInfo() {
 
         List<Team> teams = new ArrayList<>();
@@ -114,7 +94,7 @@ public class TeamServiceImplTest {
 
         Assert.assertNotNull(team1);
         Assert.assertEquals("PORTO", team1.getName());
-    }
+    }*/
 
     private Team createTeam(String name) {
         Team t = new Team();
@@ -130,5 +110,4 @@ public class TeamServiceImplTest {
 
         return t;
     }
-
 }

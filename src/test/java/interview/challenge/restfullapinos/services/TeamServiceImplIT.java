@@ -20,6 +20,9 @@ public class TeamServiceImplIT {
     @Autowired
     TeamRepository teamRepository;
 
+    @Autowired
+    TeamService teamService;
+
     @Before
     public void setUp() throws Exception {
     }
@@ -34,19 +37,19 @@ public class TeamServiceImplIT {
     @Test
     public void searchTeamByName() {
 
-        Set<Team> teamSet = teamRepository.searchByName("Sporting");
+        Set<Team> teamSet = teamRepository.searchByName("SCP");
         Team team = (Team) teamSet.toArray()[0];
 
-        Assert.assertEquals("Sporting",team.getName());
+        Assert.assertEquals("SCP",team.getName());
     }
 
     @Test
     public void searchTeamByCoach() {
 
-        Set<Team> teamSet = teamRepository.findByCoachName("José Peseiro");
+        Set<Team> teamSet = teamRepository.findByCoachName("just you");
         Team team = (Team) teamSet.toArray()[0];
 
-        Assert.assertEquals("Sporting",team.getName());
+        Assert.assertEquals("SCP",team.getName());
     }
 
 }
