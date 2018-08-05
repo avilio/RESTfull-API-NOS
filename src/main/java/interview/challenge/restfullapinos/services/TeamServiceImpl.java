@@ -127,7 +127,6 @@ public class TeamServiceImpl implements TeamService {
     @Override
     public void updateMatch(String teamId, Match match) {
 
-
         if (match.getId() == null || teamId == null)
             throw new IllegalArgumentException("Match Id or Team ID is null");
 
