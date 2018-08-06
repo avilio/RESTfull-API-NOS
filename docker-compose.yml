@@ -1,18 +1,33 @@
-tomcatserver:
-  image: mvpjava/springboot_docker_tomcat_mongodb
-  container_name: tomcat
-  ports:
-    - 8080
-  hostname: tomcat
-  links:
-    - mongodb:mongo
+#tomcatserver:
+ # image: mvpjava/springboot_docker_tomcat_mongodb
+  #container_name: tomcat
+  #ports:
+   # - 8080:8080
+  #hostname: tomcat
+  #links:
+   # - mongodb:mongo
 
-mongodb:
-  image: mongo
-  container_name: mongo
-  ports:
-      - 27017
-  hostname: mongo
-  volumes:
-      - $HOME/data/db
-  
+#mongodb:
+#  image: mongo
+#  container_name: mongo
+#  ports:
+#      - 27017:27017
+#  command: --smallfiles
+#  hostname: mongo
+#  volumes:
+#      - $HOME/data/db
+#
+
+version: "3"
+services:
+  mongodb:
+    image: mongo:3.2.20
+    container_name: "mongodb"
+    ports:
+    - 27017:27017
+  app:
+    image: avilio/restfull-api-nos
+    ports:
+    - 8080:8080
+    links:
+    - mongodb:mongo
